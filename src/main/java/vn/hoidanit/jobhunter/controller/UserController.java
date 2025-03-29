@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import vn.hoidanit.jobhunter.domain.User;
 import vn.hoidanit.jobhunter.service.UserService;
 
+import java.util.List;
+
 @RestController
 public class UserController {
   private final UserService userService;
@@ -28,11 +30,23 @@ public class UserController {
       return postManUser;
     }
   
-    @DeleteMapping("/user/{id}")
-      public String deleteUserById(
+  @DeleteMapping("/user/{id}")
+    public String deleteUserById(
+      @PathVariable("id") long id
+    ){
+      this.userService.handlerDeleteUserById(id);
+      return "User with ID " + id + "has been deleted successfully !";
+    }
+
+    @GetMapping("/user/{id}")
+      public User getUserById(
         @PathVariable("id") long id
       ){
-        this.userService.handlerDeleteUserById(id);
-        return "User with ID " + id + "has been deleted successfully !";
+        return this.userService.handlerGetUserById(id);
+      }
+
+    @GetMapping("/user")
+      public List<User> getAllUser(){
+        return this.userService.handlerGetAllUser();
       }
 }
