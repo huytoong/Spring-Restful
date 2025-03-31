@@ -11,29 +11,36 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+  private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository){
-      this.userRepository = userRepository;
+  public UserService(UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
+
+  public void handlerCreateUser(User user) {
+    this.userRepository.save(user);
+  }
+
+  public void handlerDeleteUserById(long id) {
+    this.userRepository.deleteById(id);
+  }
+
+  public User handlerGetUserById(long id) {
+    Optional<User> optionalUser = this.userRepository.findById(id);
+    if (optionalUser.isPresent()) {
+      return optionalUser.get();
     }
+    return null;
+  }
 
-    public void handlerCreateUser(User user){
-      this.userRepository.save(user);
-    }
+  public List<User> handlerGetAllUser() {
+    return this.userRepository.findAll();
+  }
 
-    public void handlerDeleteUserById(long id){
-      this.userRepository.deleteById(id);
-    }
-
-    public User handlerGetUserById(long id){
-      Optional<User> optionalUser = this.userRepository.findById(id);
-      if (optionalUser.isPresent()){
-        return optionalUser.get();
+  public User handlerUpdateUser(User user){
+      if (user.getId() != null && this.userRepository.existsById(user.getId())){
+        return this.userRepository.save(user);
       }
       return null;
     }
-
-    public List<User> handlerGetAllUser(){
-      return this.userRepository.findAll();
-    }
-}   
+}
